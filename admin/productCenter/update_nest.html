@@ -1,0 +1,90 @@
+<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+	<h4 class="modal-title">更改项目信息</h4>
+</div>
+<div class="modal-body">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="form-horizontal">
+				<div class="form-group">
+					<label class="col-md-2 control-label">项目编号</label>
+					<div class="col-md-10" style="margin-top: 7px; font-weight: 800;">
+						<span id = "nest_id_modal"></span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-2 control-label">项目名称</label>
+					<div class="col-md-10">
+						<input id="nest_name_modal" type="text" class="form-control">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-2 control-label">编辑版本号</label>
+					<div class="col-md-10">
+						<input id="edit_ver_modal" type="text" class="form-control">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-2 control-label">发布版本号</label>
+					<div class="col-md-10">
+						<input id="rel_ver_modal" type="text" class="form-control">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-2 control-label">项目描述</label>
+					<div class="col-md-10">
+						<textarea id="nest_desc_modal" class="form-control" rows="3"></textarea>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-2 control-label">状态</label>
+					<div class="col-md-10">
+						<input id="status_modal" type="text" class="form-control">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal-footer">
+	<button type="button" class="btn default" data-dismiss="modal">取消</button>
+	<button id="sub_edit" type="button" class="btn blue">提交</button>
+</div>
+<script>
+	$("#sub_edit").click(function(){
+		var nest_id = $('#nest_id_modal').html() ;
+		var nest_name = $('#nest_name_modal').val() ;
+		var nest_desc = $('#nest_desc_modal').val() ;
+		var rel_ver = $('#rel_ver_modal').val() ;
+		var edit_ver = $('#edit_ver_modal').val() ;
+		var status = $('#status_modal').val() ;
+
+		$.ajax({
+			//提交数据的类型 POST GET
+			type:"PUT",
+			//提交的网址
+			url:"http://192.168.0.57/sysman/nest/"+nest_id+"/",
+			//提交的数据
+			data:{nest_name:nest_name,nest_desc:nest_desc,edit_ver:edit_ver,rel_ver:rel_ver,status:status},
+			//返回数据的格式
+			datatype: "json",//"xml", "html", "script", "json", "jsonp", "text".
+			//在请求之前调用的函数
+			//beforeSend:function(){$("#msg").html("logining");},
+			//成功返回之后调用的函数
+			success:function(data){
+				location.href = "nest_index.html" ;
+			}   ,
+			//调用执行后调用的函数
+			/*complete: function(XMLHttpRequest, textStatus){
+			 alert(XMLHttpRequest.responseText);
+			 alert(textStatus);
+			 //alert("complete") ;
+			 //HideLoading();
+			 },*/
+			//调用出错执行的函数
+			error: function(){
+				alert("修改失败！") ;
+			}
+		});
+	}) ;
+</script>
