@@ -167,7 +167,7 @@ License: You must have a valid license purchased only from themeforest(the above
                     <a href="nest_release.html">
                         <i class="fa fa-list-ul"></i>
 						<span class="title">
-							版本管理
+							发布管理
 						</span>
                     </a>
                 </li>
@@ -346,15 +346,17 @@ License: You must have a valid license purchased only from themeforest(the above
                 <div class="form-horizontal">
                     <div class="form-body">
                         <div class="form-group">
-                            <label class="col-md-3 control-label">项目编号</label>
+                            <label class="col-md-3 control-label">*项目编号</label>
                             <div class="col-md-4">
-                                <input id="inp_nest_id" type="text" class="form-control" placeholder="输入项目编号">
+                                <input id="inp_nest_id" type="text" class="form-control" placeholder="输入项目编号(必填)">
+                                <div id="check_inp_nest_id"></div>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-md-3 control-label">项目名称</label>
+                            <label class="col-md-3 control-label">*项目名称</label>
                             <div class="col-md-4">
-                                <input id="inp_nest_name" type="text" class="form-control" placeholder="输入项目名称">
+                                <input id="inp_nest_name" type="text" class="form-control" placeholder="输入项目名称(必填)">
+                                <div id="check_inp_nest_name"></div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -379,7 +381,7 @@ License: You must have a valid license purchased only from themeforest(the above
                     <div class="form-actions fluid">
                         <div class="col-md-offset-3 col-md-9">
                             <button  id="sub" type="submit" class="btn blue">提交</button>
-                            <button type="button" class="btn default">取消</button>
+                            <button id="cancel" type="button" class="btn default">取消</button>
                         </div>
                     </div>
                 </div>
@@ -456,6 +458,7 @@ License: You must have a valid license purchased only from themeforest(the above
 <script>
     jQuery(document).ready(function() {
         App.init();
+        //UIAlertDialogApi.init();
         //TableManaged.init();
 
         $("#sub").click(function(){
@@ -465,13 +468,52 @@ License: You must have a valid license purchased only from themeforest(the above
             var rel_ver = $("#inp_rel_ver").attr("value") ;
             var nest_desc = $("#tex_nest_desc").attr("value") ;
 
+            if(nest_id.trim() == ''){
+                App.alert({
+                    //container: "#check_inp_nest_id", // alerts parent container(by default placed after the page breadcrumbs)
+                    //place: $('#alert_place').val(), // append or prepent in container
+                    type: "danger",  // alert's type
+                    message: "项目编号不能为空",  // alert's message
+                    close: true, // make alert closable
+
+                    //reset: $('#alert_reset').is(":checked"), // close all previouse alerts first
+                    focus: true, // auto scroll to the alert after shown
+                    closeInSeconds: 5, // auto close after defined seconds
+                    icon: "warning" // put icon before the message
+                });
+                return false ;
+            }
+
+            if(nest_name.trim() == ''){
+                App.alert({
+                    //container: "#check_inp_nest_name", // alerts parent container(by default placed after the page breadcrumbs)
+                    //place: $('#alert_place').val(), // append or prepent in container
+                    type: "danger",  // alert's type
+                    message: "项目名称不能为空",  // alert's message
+                    close: true, // make alert closable
+                    //reset: $('#alert_reset').is(":checked"), // close all previouse alerts first
+                    focus: true, // auto scroll to the alert after shown
+                    closeInSeconds: 5, // auto close after defined seconds
+                    icon: "warning" // put icon before the message
+                });
+                return false ;
+            }
+
             $.ajax({
                 //提交数据的类型 POST GET
                 type:"POST",
                 //提交的网址
-                url:"http://192.168.0.57/sysman/nest/",
+                url:"http://192.168.0.220/sysman/nest/",
                 //提交的数据
-                data:{nest_id:nest_id,orig_id:nest_id, nest_name:nest_name,edit_ver:edit_ver,rel_ver:rel_ver,nest_desc:nest_desc},
+                //提交的数据
+                data:{
+                    nest_id:nest_id,
+                    orig_id:nest_id,
+                    nest_name:nest_name,
+                    nest_desc:nest_desc,
+                    edit_ver:edit_ver,
+                    rel_ver:rel_ver
+                },
                 //返回数据的格式
                 datatype: "json",//"xml", "html", "script", "json", "jsonp", "text".
                 //在请求之前调用的函数
@@ -494,6 +536,10 @@ License: You must have a valid license purchased only from themeforest(the above
                     alert("添加失败！") ;
                 }
             });
+        }) ;
+
+        $("#cancel").click(function(){
+            location.href = "nest_index.html" ;
         }) ;
 
     });

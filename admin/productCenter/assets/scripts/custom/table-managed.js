@@ -9,9 +9,10 @@ var TableManaged = function () {
                 return;
             }
             // begin first table
-            $('#sample_1').dataTable({
+            $('#nest_table').dataTable({
                 //"bProcessing": true,
-                "sAjaxSource": "http://192.168.0.57/sysman/nest/", // ajax source
+                "bDestroy":true,
+                "sAjaxSource": "http://192.168.0.220/sysman/nest/", // ajax source
                 "sAjaxDataProp": "",
                 "aoColumns": [
                   /*{ "bSortable": false },
@@ -30,8 +31,8 @@ var TableManaged = function () {
                     { 'mData': function(lineData){
                         var desc = lineData.nest_desc;
                         var desnew = desc;
-                        if(desc.length > 30){
-                            desnew = "<span title=\""+desc+"\">"+desc.toString().substring(0,30) + "...</span>" ;
+                        if(desc.length > 20){
+                            desnew = "<span title=\""+desc+"\">"+desc.toString().substring(0,20) + "...</span>" ;
                         }
                         return desnew ;
                     } },
@@ -40,11 +41,10 @@ var TableManaged = function () {
                     { 'mData': 'changed'},
                     { 'mData': 'status'},
                     { 'mData': function(lineData){
-                        var id = lineData.nest_id;
-                        var num = 78 ;
-                        var progress_bar = '<div class="progress" style="margin-bottom: 0px;"><span class="progress-bar progress-bar-success" style="width:'+num+'%;color: black;text-align: left;">'+num+'%</span></div>';
-                        return progress_bar ;
-                    } },
+                        //var task_id = lineData.task_id;
+                        var taskProgress = "<a href=\"nest_release.html\">点击查看</a>" ;
+                        return taskProgress ;
+                    }},
                     { 'mData': function(lineData){
                         var id = lineData.nest_id;
                         var desc = lineData.nest_desc ;
@@ -76,8 +76,8 @@ var TableManaged = function () {
                     }
                 },
                 "aoColumnDefs": [
-                    { 'bSortable': false, 'aTargets': [8] },
-                    { "bSearchable": false, "aTargets": [8] }
+                    { 'bSortable': false, 'aTargets': [7,8] },
+                    { "bSearchable": false, "aTargets": [7,8] }
                 ],
                 "bStateSave": true,
 
@@ -108,30 +108,87 @@ var TableManaged = function () {
             //jQuery('#sample_1_wrapper .dataTables_length select').select2(); // initialize select2 dropdown
 
             // begin second table
-            $('#sample_2').dataTable({
+            $('#nest_relase_table').dataTable({
+                "bDestroy":true,
+                "sAjaxSource": "http://192.168.0.220/sysman/nestRelease/", // ajax source
+                "sAjaxDataProp": "",
                 "aoColumns": [
-                    { "bSortable": false },
-                    { "bSortable": false },
-                    { "bSortable": false, "sType": "text" },
-                    { "bSortable": false },
-                    { "bSortable": false },
-                    { "bSortable": false },
-                    { "bSortable": false }
-                ],
+                    { 'mData': 'nest_id' },
+                    { 'mData': 'rel_id' },
+                    { 'mData': 'rel_ver' },
+                    { 'mData': 'rel_name' },
+                    { 'mData': function(lineData){
+                        var desc = lineData.rel_desc;
+                        var desnew = desc;
+                        if(desc.length > 20){
+                            desnew = "<span title=\""+desc+"\">"+desc.toString().substring(0,20) + "...</span>" ;
+                        }
+                        return desnew ;
+                    } },
+                    { 'mData': 'oss_name' },
+                    { 'mData': 'changed'},
+                    { 'mData': function(lineData){
+                        var task_id = lineData.task_id;
+                        var status = "";
+                        var message = "";
+                        var num = 0 ;
+                        function showRate()
+                        {
+                            $.ajax({
+                                url:"http://192.168.0.220/task/"+task_id+"/",
+                                type:"GET",
+                                async:false,
+                                timeout:7000,
+                                success:function(data){
+                                    num = data.rate ;
+                                    status = data.status;
+                                    message = data.message;
+                                    //num = rate ;
+                                },
+                                error: function(){
+                                    alert("获得项目失败！") ;
+                                }
+                            });
+                        }
+                        //alert(task_id) ;
+
+                        if(task_id != null) {
+                            showRate() ;
+                            var progress_bar = '<div class="progress" style="margin-bottom: 0px;" title="'+status+'|'+message+'"><span class="progress-bar progress-bar-success" style="width:'+num+'%;color: black;text-align: left;">'+num+'%</span></div>';
+                            return progress_bar ;
+                        }
+                        var progress_bar = '<div class="progress" style="margin-bottom: 0px;" title="任务已删除"><span class="progress-bar progress-bar-success" style="width:100%;color: black;text-align: left;">100%</span></div>';
+                        return progress_bar ;
+                    } },
+                    /*{ 'mData': function(lineData) {
+                        var private = lineData.private;
+                        var parsedJson = jQuery.parseJSON(private);
+                        var nest_id = parsedJson.rel_desc ;
+                        return nest_id ;
+                    }},*/
+                 ],
                 "aLengthMenu": [
                     [5, 15, 20, -1],
                     [5, 15, 20, "All"] // change per page values here
                 ],
                 // set the initial value
                 "iDisplayLength": 5,
-                "sPaginationType": "bootstrap",
+                "sPaginationType": "bootstrap",  //  two_button
                 "oLanguage": {
-                    "sLengthMenu": "_MENU_ records",
+                    "sLengthMenu": "每页显示 _MENU_ 条记录",
+                    "sInfo": "从 _START_ 到 _END_ /共 _TOTAL_ 条数据",
+                    "sInfoFiltered":"(从 _MAX_ 条数据中检索)",
                     "oPaginate": {
-                        "sPrevious": "Prev",
-                        "sNext": "Next"
+                        "sPrevious": "上一页",
+                        "sNext": "下一页"
                     }
-                }
+                },
+                "aoColumnDefs": [
+                    { 'bSortable': false, 'aTargets': [0,1,2,3,4,5,6,7] },
+                    //{ "bSearchable": false, "aTargets": [0,1,3,4,5,6,7] }
+                ],
+                "aaSorting": [[ 6, "desc" ]],
+                "bStateSave": true,
             });
 
 

@@ -4,7 +4,7 @@ var FormValidation = function () {
         // for more info visit the official plugin documentation: 
             // http://docs.jquery.com/Plugins/Validation
 
-            var form1 = $('#form_sample_1');
+            var form1 = $('#form_login');
             var error1 = $('.alert-danger', form1);
             var success1 = $('.alert-success', form1);
 
@@ -14,7 +14,7 @@ var FormValidation = function () {
                 focusInvalid: false, // do not focus the last invalid input
                 ignore: "",
                 rules: {
-                    name: {
+                    inp_nest_id: {
                         minlength: 2,
                         required: true
                     },

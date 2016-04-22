@@ -5,6 +5,7 @@
 <div class="modal-body">
 	<div class="row">
 		<div class="col-md-12">
+			<div id="check_inp_update"></div>
 			<div class="form-horizontal">
 				<div class="form-group">
 					<label class="col-md-2 control-label">项目编号</label>
@@ -59,11 +60,43 @@
 		var edit_ver = $('#edit_ver_modal').val() ;
 		var status = $('#status_modal').val() ;
 
+
+		if(nest_id.trim() == ''){
+			App.alert({
+				container: "#check_inp_update", // alerts parent container(by default placed after the page breadcrumbs)
+				//place: $('#alert_place').val(), // append or prepent in container
+				type: "danger",  // alert's type
+				message: "项目编号不能为空",  // alert's message
+				close: true, // make alert closable
+
+				//reset: $('#alert_reset').is(":checked"), // close all previouse alerts first
+				focus: true, // auto scroll to the alert after shown
+				closeInSeconds: 5, // auto close after defined seconds
+				icon: "warning" // put icon before the message
+			});
+			return false ;
+		}
+
+		if(nest_name.trim() == ''){
+			App.alert({
+				container: "#check_inp_update", // alerts parent container(by default placed after the page breadcrumbs)
+				//place: $('#alert_place').val(), // append or prepent in container
+				type: "danger",  // alert's type
+				message: "项目名称不能为空",  // alert's message
+				close: true, // make alert closable
+				//reset: $('#alert_reset').is(":checked"), // close all previouse alerts first
+				focus: true, // auto scroll to the alert after shown
+				closeInSeconds: 5, // auto close after defined seconds
+				icon: "warning" // put icon before the message
+			});
+			return false ;
+		}
+
 		$.ajax({
 			//提交数据的类型 POST GET
 			type:"PUT",
 			//提交的网址
-			url:"http://192.168.0.57/sysman/nest/"+nest_id+"/",
+			url:"http://192.168.0.220/sysman/nest/"+nest_id+"/",
 			//提交的数据
 			data:{nest_name:nest_name,nest_desc:nest_desc,edit_ver:edit_ver,rel_ver:rel_ver,status:status},
 			//返回数据的格式

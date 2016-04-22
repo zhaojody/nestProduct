@@ -5,6 +5,7 @@
 <div class="modal-body">
     <div class="row">
         <div class="col-md-12">
+            <div id="check_inp_release"></div>
             <div class="form-horizontal">
                 <div class="form-group">
                     <label class="col-md-2 control-label">项目编号</label>
@@ -14,38 +15,50 @@
                 </div>
                 <div class="form-group">
                     <label class="col-md-2 control-label">项目名称</label>
-                    <div class="col-md-10"  style="margin-top: 7px; font-weight: 800;">
+                    <div class="col-md-10"  style="margin-top: 7px;">
                         <span id = "nest_name_modal_release"></span>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-md-2 control-label">发布版本ID</label>
+                    <label class="col-md-2 control-label">*发布名称</label>
+                    <div class="col-md-10">
+                        <input id="rel_name_modal_release" type="text" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">*发布版本ID</label>
+                    <div class="col-md-10">
+                        <input id="rel_id_modal_release" type="text" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">*编辑版本号</label>
                     <div class="col-md-10">
                         <input id="edit_ver_modal_release" type="text" class="form-control">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-md-2 control-label">编辑版本号</label>
-                    <div class="col-md-10">
-                        <input id="edit_ver_modal_release" type="text" class="form-control">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-md-2 control-label">发布版本号</label>
-                    <div class="col-md-10">
-                        <input id="edit_ver_modal_release" type="text" class="form-control">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-md-2 control-label">发布名称</label>
+                    <label class="col-md-2 control-label">*发布版本号</label>
                     <div class="col-md-10">
                         <input id="rel_ver_modal_release" type="text" class="form-control">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-md-2 control-label">发布描述</label>
+                    <label class="col-md-2 control-label">*发布描述</label>
                     <div class="col-md-10">
-                        <textarea id="nest_desc_modal_release" class="form-control" rows="3"></textarea>
+                        <textarea id="rel_desc_modal_release" class="form-control" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">OSS服务</label>
+                    <div class="col-md-10"  style="margin-top: 7px;">
+                        <span id = "oss_name_modal_release">ali_beijing</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">host地址</label>
+                    <div class="col-md-10"  style="margin-top: 7px;">
+                        <span id = "host_modal_release">engine.3dnest.cn</span>
                     </div>
                 </div>
             </div>
@@ -59,19 +72,121 @@
 <script>
     $("#sub_release").click(function(){
         var nest_id = $('#nest_id_modal_release').html() ;
-        var nest_name = $('#nest_name_modal_release').val() ;
-        var nest_desc = $('#nest_desc_modal_release').val() ;
-        var rel_ver = $('#rel_ver_modal_release').val() ;
+        var nest_name = $('#nest_name_modal_release').html() ;
+        var rel_name = $('#rel_name_modal_release').val() ;
+        var rel_id = $('#rel_id_modal_release').val() ;
         var edit_ver = $('#edit_ver_modal_release').val() ;
-        var status = $('#status_modal_release').val() ;
+        var rel_ver = $('#rel_ver_modal_release').val() ;
+        var rel_desc = $('#rel_desc_modal_release').val() ;
+        var oss_name = $('#oss_name_modal_release').html() ;
+        var host = $('#host_modal_release').html() ;
+
+
+        if(rel_name.trim() == ''){
+            App.alert({
+                container: "#check_inp_release", // alerts parent container(by default placed after the page breadcrumbs)
+                //place: $('#alert_place').val(), // append or prepent in container
+                type: "danger",  // alert's type
+                message: "发布名称不能为空",  // alert's message
+                close: true, // make alert closable
+
+                //reset: $('#alert_reset').is(":checked"), // close all previouse alerts first
+                focus: true, // auto scroll to the alert after shown
+                closeInSeconds: 5, // auto close after defined seconds
+                icon: "warning" // put icon before the message
+            });
+            return false ;
+        }
+
+        if(rel_id.trim() == ''){
+            App.alert({
+                container: "#check_inp_release", // alerts parent container(by default placed after the page breadcrumbs)
+                //place: $('#alert_place').val(), // append or prepent in container
+                type: "danger",  // alert's type
+                message: "发布版本ID不能为空",  // alert's message
+                close: true, // make alert closable
+
+                //reset: $('#alert_reset').is(":checked"), // close all previouse alerts first
+                focus: true, // auto scroll to the alert after shown
+                closeInSeconds: 5, // auto close after defined seconds
+                icon: "warning" // put icon before the message
+            });
+            return false ;
+        }
+
+        if(edit_ver.trim() == ''){
+            App.alert({
+                container: "#check_inp_release", // alerts parent container(by default placed after the page breadcrumbs)
+                //place: $('#alert_place').val(), // append or prepent in container
+                type: "danger",  // alert's type
+                message: "编辑版本号不能为空",  // alert's message
+                close: true, // make alert closable
+
+                //reset: $('#alert_reset').is(":checked"), // close all previouse alerts first
+                focus: true, // auto scroll to the alert after shown
+                closeInSeconds: 5, // auto close after defined seconds
+                icon: "warning" // put icon before the message
+            });
+            return false ;
+        }
+
+        if(rel_ver.trim() == ''){
+            App.alert({
+                container: "#check_inp_release", // alerts parent container(by default placed after the page breadcrumbs)
+                //place: $('#alert_place').val(), // append or prepent in container
+                type: "danger",  // alert's type
+                message: "发布版本号不能为空",  // alert's message
+                close: true, // make alert closable
+
+                //reset: $('#alert_reset').is(":checked"), // close all previouse alerts first
+                focus: true, // auto scroll to the alert after shown
+                closeInSeconds: 5, // auto close after defined seconds
+                icon: "warning" // put icon before the message
+            });
+            return false ;
+        }
+
 
         $.ajax({
             //提交数据的类型 POST GET
-            type:"PUT",
+            type:"POST",
             //提交的网址
-            url:"http://192.168.0.57/sysman/nest/"+nest_id+"/",
+            url:"http://192.168.0.220/task/",
             //提交的数据
-            data:{nest_name:nest_name,nest_desc:nest_desc,edit_ver:edit_ver,rel_ver:rel_ver,status:status},
+            data:{
+                task_type:"release",
+                req_ip:"127.0.0.1",
+                username:"hanxue",
+                task_desc:"This a release task",
+                private:"{" +
+                "\"nest_id\":\"" + nest_id + "\"," +
+                "\"orig_id\":\"3dnest\"," +
+                "\"rel_id\":\"" + rel_id + "\"," +
+                "\"task_uuid\":\"" + nest_id + "\"," +
+                "\"task_name\":\"release task\"," +
+                "\"nest_name\":\"" + nest_name + "\"," +
+                "\"nest_desc\":\"nest desc\"," +
+                "\"edit_ver\":\"" + edit_ver + "\"," +
+                "\"rel_ver\":\"" + rel_ver + "\"," +
+                "\"rel_name\":\"" + rel_name + "\"," +
+                "\"rel_desc\":\"" + rel_desc + "\"," +
+                "\"oss_name\":\"" + oss_name + "\"," +
+                "\"host\":\"" + host + "\"}"
+                /*task_type:"test",
+                req_ip:"127.0.0.1",
+                username:"hanxue",
+                task_desc:"This a release task",
+                //private:'{"nest_id": "789_15", "orig_id": "cerZ4EYn1Yt", "stage1": 5, "stage2": 10, "stage3": 10, "stage4": 10, "select": 1}'
+                private:"{" +
+                "\"nest_id\":\""+nest_id +"\","+
+                "\"orig_id\":\"3dnest\"" +","+
+                "\"select\":1" +","+
+                "\"stage1\":5" +","+
+                "\"stage2\":10" +","+
+                "\"stage3\":10" +","+
+                "\"stage4\":10"+
+                "}"*/
+            },
             //返回数据的格式
             datatype: "json",//"xml", "html", "script", "json", "jsonp", "text".
             //在请求之前调用的函数
@@ -79,7 +194,7 @@
             //成功返回之后调用的函数
             success:function(data){
                 location.href = "nest_index.html" ;
-            }   ,
+            },
             //调用执行后调用的函数
             /*complete: function(XMLHttpRequest, textStatus){
              alert(XMLHttpRequest.responseText);
